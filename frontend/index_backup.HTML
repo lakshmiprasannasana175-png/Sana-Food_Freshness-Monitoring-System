@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Food Freshness Monitoring Platform</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #2e7d32;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        #analysisResult {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f1f8e9;
+            border: 2px solid #81c784;
+            display: none;
+        }
+
+        .result-title {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        .status {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 8px;
+            background: #c8e6c9;
+            margin-top: 15px;
+        }
+
+        .error {
+            background: #ffebee;
+            border: 2px solid #ef5350;
+            color: #b71c1c;
+        }
+    .dashboard {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f1f8e9;
+    border-radius: 12px;
+    border: 2px solid #81c784;
+}
+
+.dashboard h2 {
+    color: #2e7d32;
+    margin-top: 0;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.dashboard-card h3 {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+.dashboard-card p {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2e7d32;
+}
+   .history-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f1f8e9;
+    border-radius: 12px;
+    border: 2px solid #81c784;
+}
+
+.history-section h2 {
+    color: #2e7d32;
+}
+
+.history-section table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.history-section th,
+.history-section td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.history-section th {
+    background: #2e7d32;
+    color: white;
+}
+.alert-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fff8e1;
+    border-radius: 12px;
+    border: 2px solid #ffcc80;
+}
+
+.alert-section h2 {
+    color: #e65100;
+    margin-top: 0;
+}
+
+#freshnessAlert {
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    font-weight: bold;
+}
+   </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Food Freshness Monitoring Platform</h1>
+        <p>AI-Based Food Freshness Analysis</p>
+    </header>
+<div class="dashboard">
+    <h2>Freshness Dashboard</h2>
+
+    <div class="dashboard-cards">
+        <div class="dashboard-card">
+            <h3>Freshness Score</h3>
+            <p id="dashboardScore">--</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Category</h3>
+            <p id="dashboardCategory">--</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Shelf Life</h3>
+            <p id="dashboardShelfLife">--</p>
+        </div>
+
+        <div class="dashboard-card">
+            <h3>Food</h3>
+            <p id="dashboardFood">--</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+<div class="history-section">
+    <h2>Freshness History</h2>
+
+    <table>
+        <tr>
+            <th>Food</th>
+            <th>Score</th>
+            <th>Category</th>
+            <th>Shelf Life</th>
+        </tr>
+
+        <tbody id="historyTable">
+            <tr id="noHistory">
+    <td colspan="4">No analysis history yet</td>
+</tr>
+        </tbody>
+    </table>
+</div>
+<div class="alert-section">
+    <h2>Freshness Alerts</h2>
+
+    <div id="freshnessAlert">
+        No alerts at the moment.
+    </div>
+</div>
+<div class="inventory-section">
+    <h2>Inventory & Batch Management</h2>
+    <div class="inventory-form">
+    <input type="text" id="batchId" placeholder="Batch ID">
+    <input type="text" id="inventoryFood" placeholder="Food Name">
+    <input type="number" id="quantity" placeholder="Quantity">
+
+    <button onclick="addInventory()">Add Batch</button>
+</div>
+
+    <table>
+        <tr>
+            <th>Batch ID</th>
+            <th>Food</th>
+            <th>Quantity</th>
+            <th>Status</th>
+        </tr>
+
+        <tbody id="inventoryTable">
+        </tbody>
+    </table>
+</div>
+        <h2>Food Freshness Analysis</h2>
+
+        <label for="foodName">Food Name</label>
+        <label for="foodImage">Food Image</label>
+<input type="file" id="foodImage" accept="image/*">
+<img id="imagePreview" width="200" style="margin-top:15px;">
+        <input
+            type="text"
+            id="foodName"
+            placeholder="Example: Apple"
+        >
+
+        <label for="temperature">Storage Temperature (°C)</label>
+        <input
+            type="number"
+            id="temperature"
+            placeholder="Example: 5"
+        >
+
+        <label for="humidity">Humidity (%)</label>
+        <input
+            type="number"
+            id="humidity"
+            placeholder="Example: 60"
+        >
+
+        <label for="duration">Storage Duration (days)</label>
+        <label for="airCirculation">Air Circulation</label>
+<select id="airCirculation">
+    <option value="Good">Good</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Poor">Poor</option>
+</select>
+        <input
+            type="number"
+            id="duration"
+            placeholder="Example: 3"
+        >
+<
+<label for="lightExposure">Light Exposure</label>
+<select id="lightExposure">
+    <option value="Low">Low</option>
+    <option value="Moderate">Moderate</option>
+    <option value="High">High</option>
+</select>
+        <button onclick="analyzeFood()">
+            Analyze Freshness
+        </button>
+
+        <div id="analysisResult"></div>
+        <div id="imageResult"></div>
+
+    </div>
+
+    <script>
+        const duration = document.getElementById("duration").value;
+const foodImage = document.getElementById("foodImage");
+
+foodImage.addEventListener("change", function () {
+    const file = foodImage.files[0];
+
+    if (file) {
+        imagePreview.src = URL.createObjectURL(file);
+    }
+});
+
+        async function analyzeFood() {
+
+            const foodName = document.getElementById("foodName").value;
+            const temperature = document.getElementById("temperature").value;
+            const humidity = document.getElementById("humidity").value;
+            const duration = document.getElementById("duration").value;
+            const airCirculation = document.getElementById("airCirculation").value;
+            const lightExposure = document.getElementById("lightExposure").value;
+            const imageFile = document.getElementById("foodImage").files[0];
+
+            const result = document.getElementById("analysisResult");
+
+            if (!foodName || !temperature || !humidity || !duration) {
+                result.style.display = "block";
+                result.className = "error";
+                result.innerHTML = "<b>Please fill all fields.</b>";
+                return;
+            }
+
+            try {
+if (imageFile) {
+    const formData = new FormData();
+    formData.append("file", imageFile);
+
+    await fetch("http://127.0.0.1:8000/upload-image", {
+        method: "POST",
+        body: formData
+    });
+}
+                const response = await fetch(
+                    "http://127.0.0.1:8000/analyze",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            food_name: foodName,
+                            temperature: Number(temperature),
+                            humidity: Number(humidity),
+                            duration: Number(duration),
+                            air_circulation: airCirculation,
+                            light_exposure: lightExposure
+                        })
+                    }
+                );
+
+                const data = await response.json();
+                const alertBox = document.getElementById("freshnessAlert");
+
+if (data.category === "Fresh" || data.category === "Good") {
+    alertBox.innerText = "✅ Food is in good condition.";
+} else if (data.category === "Acceptable") {
+    alertBox.innerText = "⚠️ Food quality is decreasing. Monitor carefully.";
+} else if (data.category === "Near Spoilage") {
+    alertBox.innerText = "⚠️ Warning: Food is near spoilage. Consume soon.";
+} else if (data.category === "Spoiled") {
+    alertBox.innerText = "🚨 ALERT: Food appears spoiled. Do not consume.";
+}
+                const noHistory = document.getElementById("noHistory");
+if (noHistory) {
+    noHistory.remove();  
+}                                                                                     
+    const historyTable = document.getElementById("historyTable");
+
+
+const row = historyTable.insertRow();
+row.insertCell(0).innerText = data.food_name;
+row.insertCell(1).innerText = data.freshness_score;
+row.insertCell(2).innerText = data.category;
+row.insertCell(3).innerText = data.shelf_life + " days";    
+                document.getElementById("dashboardScore").innerText = data.freshness_score;
+document.getElementById("dashboardCategory").innerText = data.category;
+document.getElementById("dashboardShelfLife").innerText = data.shelf_life + " days";
+document.getElementById("dashboardFood").innerText = data.food_name;
+
+                result.className = "";
+                result.style.display = "block";
+const imageResult = document.getElementById("imageResult");
+
+if (imageFile) {
+    imageResult.innerHTML = `
+        <h3>Uploaded Food Image</h3>
+        <img src="${URL.createObjectURL(imageFile)}"
+             width="250"
+             style="border-radius:10px;">
+    `;
+}
+document.getElementById("dashboardScore").innerText =
+    data.freshness_score;
+
+document.getElementById("dashboardCategory").innerText =
+    data.category;
+
+document.getElementById("dashboardShelfLife").innerText =
+    data.shelf_life + " days";
+
+document.getElementById("dashboardFood").innerText =
+    data.food_name;
+                result.innerHTML = `
+                    <h3 class="result-title">
+                        🍎 Freshness Analysis Result
+                    </h3>
+
+                    <div class="result-item">
+                        <b>Food:</b> ${data.food_name}
+                    </div>
+
+                    <div class="result-item">
+                        <b>Freshness Score:</b> ${data.freshness_score}%
+                    </div>
+
+                    <div class="result-item">
+                        <b>Category:</b> ${data.category}
+                    </div>
+
+                    <div class="result-item">
+                        <b>Estimated Shelf Life:</b> ${data.shelf_life} days
+                    </div>
+                    <div class="result-item">
+    <b>Recommendation:</b> ${data.recommendation}
+</div>
+
+                    <div class="status">
+                        Status: ${data.category}
+                    </div>
+                `;
+
+            } catch (error) {
+
+                result.style.display = "block";
+                result.className = "error";
+
+                result.innerHTML =
+                    "<b>Backend connection failed.</b><br>" +
+                    "Please make sure FastAPI server is running.";
+            }
+        }
+function addInventory() {
+    const batchId = document.getElementById("batchId").value;
+    const food = document.getElementById("inventoryFood").value;
+    const quantity = document.getElementById("quantity").value;
+
+    if (batchId === "" || food === "" || quantity === "") {
+        alert("Please enter all batch details.");
+        return;
+    }
+const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+inventory.push({
+    batchId: batchId,
+    food: food,
+    quantity: quantity
+});
+
+localStorage.setItem("inventory", JSON.stringify(inventory));
+    const table = document.getElementById("inventoryTable");
+
+    const row = table.insertRow();
+
+    row.insertCell(0).innerText = batchId;
+    row.insertCell(1).innerText = food;
+    row.insertCell(2).innerText = quantity;
+
+    const statusCell = row.insertCell(3);
+    statusCell.innerText = Number(quantity) > 0 ? "Available" : "Out of Stock";
+
+const actionCell = row.insertCell(4);
+const button = document.createElement("button");
+button.innerText = "Remove";
+
+button.onclick = function () {
+    const batchId = row.cells[0].innerText;
+
+    let inventory =
+        JSON.parse(localStorage.getItem("inventory")) || [];
+
+    inventory = inventory.filter(item => item.batchId !== batchId);
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(inventory)
+    );
+
+    loadInventory();
+};
+
+actionCell.appendChild(button);
+    
+
+    document.getElementById("batchId").value = "";
+    document.getElementById("inventoryFood").value = "";
+    document.getElementById("quantity").value = "";
+}
+function loadInventory() {
+    const table = document.getElementById("inventoryTable");
+    const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+
+    // Keep header row only
+    while (table.rows.length > 1) {
+        table.deleteRow(1);
+    }
+
+    inventory.forEach(function(item, index) {
+        const row = table.insertRow();
+
+        row.insertCell(0).innerText = item.batchId;
+        row.insertCell(1).innerText = item.food;
+        row.insertCell(2).innerText = item.quantity;
+
+        const statusCell = row.insertCell(3);
+        statusCell.innerText =
+            Number(item.quantity) > 0 ? "Available" : "Out of Stock";
+
+        const actionCell = row.insertCell(4);
+
+        const button = document.createElement("button");
+        button.innerText = "Remove";
+
+        button.addEventListener("click", function() {
+            removeInventory(index);
+        });
+
+        actionCell.appendChild(button);
+    });
+}
+
+function removeInventory(index) {
+    let inventory =
+        JSON.parse(localStorage.getItem("inventory")) || [];
+
+    inventory.splice(index, 1);
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(inventory)
+    );
+    loadInventory();
+}
+    </script>
+
+</body>
+</html> 
