@@ -441,13 +441,13 @@ async function analyzeFood() {
         if (imageFile) {
             const formData = new FormData();
             formData.append("file", imageFile);
-            await fetch("http://127.0.0.1:8000/upload-image", {
+            await fetch("/upload-image", {
                 method: "POST",
                 body: formData
             });
         }
 
-        const response = await fetch("http://127.0.0.1:8000/analyze", {
+        const response = await fetch("/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -616,7 +616,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 async function loadDatabaseHistory() {
     try {
-        const response = await fetch("http://127.0.0.1:8000/history");
+        const response = await fetch("/history");
 
         if (!response.ok) {
             return;
@@ -797,7 +797,7 @@ Food Freshness Monitoring System
     URL.revokeObjectURL(url);
 }
 async function downloadPDF() {
-    const response = await fetch("http://127.0.0.1:8000/history");
+    const response = await fetch("/history");
     const history = await response.json();
 
     if (history.length === 0) {
@@ -808,13 +808,13 @@ async function downloadPDF() {
     const latestId = history[0].id;
 
     window.open(
-        `http://127.0.0.1:8000/generate-pdf/${latestId}`,
+        `/generate-pdf/${latestId}`,
         "_blank"
     );
 }
 async function downloadExcel() {
     window.open(
-        "http://127.0.0.1:8000/generate-excel",
+        "/generate-excel",
         "_blank"
     );
 }

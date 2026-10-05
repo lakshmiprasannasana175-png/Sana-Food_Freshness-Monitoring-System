@@ -1,5 +1,8 @@
+import html
+
 from fastapi import FastAPI,UploadFile, File
 import sqlite3
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
 from reportlab.pdfgen import canvas
@@ -33,12 +36,7 @@ init_database()
 
 @app.get("/")
 def home():
-    
-    return {
-        "message": "Food Freshness Monitoring Platform is running!"
-    }
-
-
+    return FileResponse("../index.HTML")
 class FoodData(BaseModel):
     food_name: str
     temperature: float
@@ -135,7 +133,6 @@ def get_history():
     conn.close()
 
     return history
-@app.post("/upload-image")
 @app.get("/generate-pdf/{food_id}")
 def generate_pdf(food_id: int):
 
@@ -215,6 +212,7 @@ def generate_excel():
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         filename="food_freshness_report.xlsx"
     )
+@app.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
     return {
         "filename": file.filename,
