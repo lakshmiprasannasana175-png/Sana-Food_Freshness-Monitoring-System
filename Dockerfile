@@ -3,7 +3,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY backend /app/backend
-COPY index.HTML /app/index.HTML
+COPY frontend/index.html/app/index.html
 
 RUN pip install fastapi uvicorn python-multipart reportlab openpyxl
 
