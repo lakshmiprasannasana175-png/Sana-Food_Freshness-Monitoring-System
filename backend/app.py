@@ -36,7 +36,7 @@ init_database()
 from pathlib import Path
 from fastapi.responses import FileResponse
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 INDEX_FILE = BASE_DIR / "frontend" / "index.html"
 
 @app.get("/")
