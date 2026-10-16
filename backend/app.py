@@ -33,10 +33,16 @@ def init_database():
 
 
 init_database()
+from pathlib import Path
+from fastapi.responses import FileResponse
+
+BASE_DIR = Path(__file__).resolve().parent
+INDEX_FILE = BASE_DIR / "frontend" / "index.html"
 
 @app.get("/")
 def home():
-    return FileResponse("../index.html")
+    return FileResponse(str(INDEX_FILE))
+
 class FoodData(BaseModel):
     food_name: str
     temperature: float
