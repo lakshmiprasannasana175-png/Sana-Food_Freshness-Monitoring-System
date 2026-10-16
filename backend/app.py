@@ -36,7 +36,7 @@ init_database()
 
 @app.get("/")
 def home():
-    return FileResponse("../index.HTML")
+    return FileResponse("../index.html")
 class FoodData(BaseModel):
     food_name: str
     temperature: float
